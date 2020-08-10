@@ -81,4 +81,3 @@ class ChaosMaster:
 
     def info(self):
         return {"interval": self.get_interval(), "group": self.get_group(), "last injection": self.__get_last_injection()}
-
