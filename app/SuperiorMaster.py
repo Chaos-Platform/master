@@ -3,14 +3,18 @@ from chaos_master import ChaosMaster
 
 class SuperiorMaster:
     def __init__(self, random_picker_url, injector_url):
-        __masters = {}
-        random_picker_url = random_picker_url
-        injector_url = injector_url
+        self.__masters = {}
+        self.random_picker_url = random_picker_url
+        self.injector_url = injector_url
         self.__download_masters()
 
     def add_master(self, uid, interval, group):
+        print("hi1")
+        print(self.injector_url)
         self.__masters[uid] = ChaosMaster(injector_url=self.injector_url, random_picker_url=self.random_picker_url, interval=interval, group=group)
+        print("hi2")
         self.__upload_masters()
+        print("hi3")
 
     def remove_master(self, uid):
         try:
@@ -27,6 +31,7 @@ class SuperiorMaster:
 
     def change_group(self, uid, group):
         try:
+            print("hello")
             self.__masters[uid].set_group(group)
         except:
             print("Failed to change group of uid: ", uid)
@@ -42,6 +47,7 @@ class SuperiorMaster:
 
             file.writelines(masters_to_save)
             file.close()
+            print("Saved masters in file")
         except:
             print("Failed to save masters in file.")
 
@@ -55,4 +61,3 @@ class SuperiorMaster:
             file.close()
         except:
             print("Failed to achieve masters from file.")
-
