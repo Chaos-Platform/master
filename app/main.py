@@ -3,11 +3,11 @@ import os
 from chaos_master import ChaosMaster
 from SuperiorMaster import SuperiorMaster
 
-random_picker_url = os.environ.get("PICKER_API", "http://127.0.0.1:5001")
-injector_url = os.environ.get("INJECTOR_API", "http://127.0.0.1:5002")
+random_picker_url = os.environ.get("PICKER_API", "http://52.255.160.180:5001")
+injector_url = os.environ.get("INJECTOR_API", "http://52.255.160.180:5002")
 server_port = int(os.environ.get("SERVER_PORT", 5003))
 
-superior_master = SuperiorMaster(random_picker_url, injector_url)
+superior_master = SuperiorMaster(random_picker_url=random_picker_url, injector_url=injector_url)
 app = Flask(__name__)
 
 @app.route('/set-interval',methods=['POST'])
@@ -17,7 +17,7 @@ def set_new_interval():
     try:
         new_interval = json_object["interval"]
         uid = json_object["uid"]
-        superior_master.change_interval(str(uid), int(interval))
+        superior_master.change_interval(str(uid), int(new_interval))
         message = "Succeed changing the interval of " + str(uid)
     except:
         message = "interval and uid are required parameters"
@@ -31,13 +31,15 @@ def set_new_group():
     try:
         new_group = json_object["group"]
         uid = json_object["uid"]
-        superior_master.change_group(str(uid), str(group))
+        print("set_new_group1")
+        superior_master.change_group(str(uid), str(new_group))
         message = "Succeed changing the group by id=" + str(id)
-    except:
-        message = "group and uid are required parameters"
+    except Exception as e:
+        message = "group and uid are required parameters", e
         print(message)
         return "group and uid are required parameters", 400
     return message, 200
+
 
 @app.route('/add-master', methods=['POST'])
 def add_master():
@@ -54,9 +56,9 @@ def add_master():
         superior_master.add_master(str(uid), int(interval), str(group))
         message = "Succeed creating master instance"
         print(message)
-    except:
-        message = "Error - adding master instance."
-        print("Error - adding master instance.")
+    except Exception as e:
+        message = "Error - adding master instance." , e
+        print(message)
 
     return message, 200
 
